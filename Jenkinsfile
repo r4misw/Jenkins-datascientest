@@ -8,7 +8,6 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'datascientestapi'
-        DOCKER_TAG = "v.${BUILD_ID}.0"
         CONTAINER_NAME = 'jenkins'
         GITHUB_REPO = 'r4misw/Jenkins-datascientest'
         STATUS_CONTEXT = 'jenkins/pr-ci'
@@ -29,6 +28,14 @@ EOF
                           -d @status.json >/dev/null
                         rm -f status.json
                     '''
+                }
+            }
+        }
+
+        stage('Resolve Image Tag') {
+            steps {
+                script {
+                    env.DOCKER_TAG = env.TAG_NAME?.trim() ? env.TAG_NAME : "v.${env.BUILD_ID}.0"
                 }
             }
         }
@@ -57,18 +64,9 @@ EOF
             }
         }
 
-        stage('Approve Release') {
-            when {
-                branch 'main'
-            }
-            steps {
-                input message: 'Publish the official Docker image?', ok: 'Publish'
-            }
-        }
-
         stage('Publish Image') {
             when {
-                branch 'main'
+                buildingTag()
             }
             environment {
                 DOCKERHUB_CREDENTIALS = credentials('docker_jenkins')

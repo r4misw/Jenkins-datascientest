@@ -14,11 +14,17 @@ This repository contains a small Flask application, unit tests, a Docker image d
 
 The pipeline covers the following steps:
 
-1. Build the application image on branches and pull requests
+1. Build the application image on branches, pull requests, and tags
 2. Run the unit tests automatically
 3. Deploy the container locally on main
-4. Wait for manual approval before publishing from main
-5. Push the image to Docker Hub only from main
+4. Publish the official Docker image only from a Git tag or GitHub release tag
+
+The intended delivery flow is:
+
+1. Open a pull request against main
+2. Merge it once the jenkins/pr-ci status check is green
+3. Create a release tag such as v1.0.0
+4. Let Jenkins publish the matching Docker image tag automatically
 
 ## Repository Layout
 
