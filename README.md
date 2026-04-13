@@ -26,6 +26,8 @@ The intended delivery flow is:
 3. Create a release tag such as v1.0.0
 4. Let Jenkins publish the matching Docker image tag automatically
 
+The branch protection and review gate below are intentionally validated through temporary pull requests.
+
 ## Repository Layout
 
 - app.py: Flask application used in the demo
