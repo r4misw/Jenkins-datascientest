@@ -7,7 +7,6 @@ pipeline {
     }
 
     environment {
-        DOCKER_ID = 'r4misw'
         DOCKER_IMAGE = 'datascientestapi'
         DOCKER_TAG = "v.${BUILD_ID}.0"
         CONTAINER_NAME = 'jenkins'
@@ -45,8 +44,8 @@ pipeline {
                 script {
                     sh '''
                         docker rm -f ${CONTAINER_NAME} || true
-                        docker build -t ${DOCKER_ID}/${DOCKER_IMAGE}:${DOCKER_TAG} .
-                        docker run -d -p 8000:8000 --name ${CONTAINER_NAME} ${DOCKER_ID}/${DOCKER_IMAGE}:${DOCKER_TAG}
+                        docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
+                        docker run -d -p 8000:8000 --name ${CONTAINER_NAME} ${DOCKER_IMAGE}:${DOCKER_TAG}
                     '''
                 }
             }
@@ -67,7 +66,8 @@ pipeline {
                     steps {
                         sh '''
                             echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin
-                            docker push ${DOCKER_ID}/${DOCKER_IMAGE}:${DOCKER_TAG}
+                            docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKERHUB_CREDENTIALS_USR}/${DOCKER_IMAGE}:${DOCKER_TAG}
+                            docker push ${DOCKERHUB_CREDENTIALS_USR}/${DOCKER_IMAGE}:${DOCKER_TAG}
                         '''
                     }
                 }
