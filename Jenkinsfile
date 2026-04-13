@@ -54,10 +54,7 @@ pipeline {
 
         stage('User Acceptance') {
             steps {
-                input {
-                    message 'Proceed to push image to Docker Hub?'
-                    ok 'Yes'
-                }
+                input message: 'Proceed to push image to Docker Hub?', ok: 'Yes'
             }
         }
 
