@@ -1,0 +1,7 @@
+*
+!app.py
+!test_main.py
+!requirements.txt
+!Dockerfile
+!Jenkinsfile
+!.dockerignore
