@@ -14,11 +14,11 @@ This repository contains a small Flask application, unit tests, a Docker image d
 
 The pipeline covers the following steps:
 
-1. Build the application image
-2. Run the unit tests
-3. Deploy the container locally
-4. Wait for manual approval
-5. Push the image to Docker Hub
+1. Build the application image on branches and pull requests
+2. Run the unit tests automatically
+3. Deploy the container locally on main
+4. Wait for manual approval before publishing from main
+5. Push the image to Docker Hub only from main
 
 ## Repository Layout
 
