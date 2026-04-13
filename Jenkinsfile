@@ -15,39 +15,22 @@ pipeline {
     stages {
         stage('Building') {
             steps {
-                sh '''
-                    docker run --rm \
-                      -v "$PWD":/workspace \
-                      -w /workspace \
-                      -e PYTHONDONTWRITEBYTECODE=1 \
-                      python:3.11-slim \
-                      sh -c "pip install --no-cache-dir -r requirements.txt"
-                '''
+                sh 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .'
             }
         }
 
         stage('Testing') {
             steps {
-                sh '''
-                    docker run --rm \
-                      -v "$PWD":/workspace \
-                      -w /workspace \
-                      -e PYTHONDONTWRITEBYTECODE=1 \
-                      python:3.11-slim \
-                      sh -c "pip install --no-cache-dir -r requirements.txt && python -m unittest -v"
-                '''
+                sh 'docker run --rm ${DOCKER_IMAGE}:${DOCKER_TAG} python -m unittest -v'
             }
         }
 
         stage('Deploying') {
             steps {
-                script {
-                    sh '''
-                        docker rm -f ${CONTAINER_NAME} || true
-                        docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
-                        docker run -d -p 8000:8000 --name ${CONTAINER_NAME} ${DOCKER_IMAGE}:${DOCKER_TAG}
-                    '''
-                }
+                sh '''
+                    docker rm -f ${CONTAINER_NAME} || true
+                    docker run -d -p 8000:8000 --name ${CONTAINER_NAME} ${DOCKER_IMAGE}:${DOCKER_TAG}
+                '''
             }
         }
 
